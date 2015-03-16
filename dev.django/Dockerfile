@@ -13,5 +13,5 @@ RUN cd / \
 COPY ./requirements.pip /tmp/requirements.pip
 
 RUN source /venv/DeliveryHeroChina/bin/activate \
- && pip install -i http://pypi.douban.com/simple --timeout 120 -r /tmp/requirements.pip
+ && pip install --timeout 120 -r /tmp/requirements.pip
  && rm /tmp/requirements.pip

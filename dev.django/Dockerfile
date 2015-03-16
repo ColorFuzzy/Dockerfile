@@ -5,8 +5,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends libmemcached-dev mg vim
 
 RUN cd / \
- && mkdir \
- && venv \
+ && mkdir venv \
  && cd venv \
  && virtualenv DeliveryHeroChina
 

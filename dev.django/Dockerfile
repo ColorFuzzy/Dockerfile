@@ -10,10 +10,8 @@ RUN cd / \
  && cd venv \
  && virtualenv DeliveryHeroChina
 
-COPY .pip1 /tmp/pip1
-COPY .pip2 /tmp/pip2
+COPY ./requirements.pip /tmp/requirements.pip
 
 RUN source /venv/DeliveryHeroChina/bin/activate \
- && pip install -i http://pypi.douban.com/simple --timeout 120 -r /tmp/pip1
-RUN source /venv/DeliveryHeroChina/bin/activate \
- && pip install -i http://pypi.douban.com/simple --timeout 120 -r /tmp/pip2
+ && pip install -i http://pypi.douban.com/simple --timeout 120 -r /tmp/requirements.pip
+ && rm /tmp/requirements.pip

@@ -1,6 +1,7 @@
 FROM python:2.7
 MAINTAINER Color Fuzzy <color.fuzzy@gmail.com>
 
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends libmemcached-dev mg vim
 

@@ -5,7 +5,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get update \
  && apt-get install -y --no-install-recommends libmemcached-dev mg vim net-tools git \
  && apt-get install -y --no-install-recommends openssh-client openssh-server \
- && apt-get install -y --no-install-recommends python-gdal
+ && apt-get install -y --no-install-recommends libgeos-dev binutils python-gdal \
  && rm -rf /var/lib/apt/lists/*
 
 RUN cd / \

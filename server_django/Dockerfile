@@ -3,7 +3,8 @@ MAINTAINER Color Fuzzy <color.fuzzy@gmail.com>
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends libmemcached-dev mg vim
+ && apt-get install -y --no-install-recommends libmemcached-dev mg vim
+ && rm -rf /var/lib/apt/lists/*
 
 RUN cd / \
  && mkdir venv \

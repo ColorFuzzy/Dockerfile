@@ -1,24 +1,29 @@
 FROM python:2.7
 MAINTAINER Color Fuzzy <color.fuzzy@gmail.com>
 
+## get the `source` command & update
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-RUN apt-get update \
- && apt-get install -y --no-install-recommends libmemcached-dev mg vim net-tools git \
- && apt-get install -y --no-install-recommends openssh-client openssh-server \
- && apt-get install -y --no-install-recommends libgeos-dev binutils python-gdal \
- && rm -rf /var/lib/apt/lists/*
+RUN apt-get update
 
+## setup env
 RUN cd / \
  && mkdir venv \
  && cd venv \
  && virtualenv DeliveryHeroChina
-
 COPY ./requirements.pip /tmp/requirements.pip
-
+# memcached lib for pip
+RUN apt-get install -y --no-install-recommends libmemcached-dev
 RUN source /venv/DeliveryHeroChina/bin/activate \
  && pip install --timeout 120 -r /tmp/requirements.pip \
  && rm /tmp/requirements.pip
 
+# install packages
+RUN apt-get install -y --no-install-recommends mg vim net-tools git
+RUN apt-get install -y --no-install-recommends openssh-client openssh-server
+RUN apt-get install -y --no-install-recommends libgeos-dev binutils python-gdal
+RUN rm -rf /var/lib/apt/lists/*
+
+# package bugfix
+sed -i '113s/()/()[:-6]/' /venv/DeliveryHeroChina/lib/python2.7/site-packages/django/contrib/gis/geos/libgeos.py
+
 VOLUME /var/log/DeliveryHeroChina
-
-

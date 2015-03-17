@@ -3,7 +3,8 @@ MAINTAINER Color Fuzzy <color.fuzzy@gmail.com>
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get update \
- && apt-get install -y --no-install-recommends libmemcached-dev mg vim net-tools \
+ && apt-get install -y --no-install-recommends libmemcached-dev mg vim net-tools git \
+ && apt-get install -y --no-install-recommends openssh-client openssh-server \
  && rm -rf /var/lib/apt/lists/*
 
 RUN cd / \

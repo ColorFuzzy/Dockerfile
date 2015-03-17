@@ -5,6 +5,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get update \
  && apt-get install -y --no-install-recommends libmemcached-dev mg vim net-tools git \
  && apt-get install -y --no-install-recommends openssh-client openssh-server \
+ && apt-get install -y --no-install-recommends python-gdal
  && rm -rf /var/lib/apt/lists/*
 
 RUN cd / \
@@ -17,5 +18,7 @@ COPY ./requirements.pip /tmp/requirements.pip
 RUN source /venv/DeliveryHeroChina/bin/activate \
  && pip install --timeout 120 -r /tmp/requirements.pip \
  && rm /tmp/requirements.pip
+
+VOLUME /var/log/DeliveryHeroChina
 
 

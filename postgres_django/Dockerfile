@@ -6,7 +6,7 @@ ENV POSTGIS_MAJOR 1.5
 RUN echo deb http://http.debian.net/debian wheezy-backports main >> /etc/apt/sources.list
 RUN apt-get update \
       && apt-get install -y --no-install-recommends \
-           postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
+           postgresql-$PG_MAJOR-postgis \
            postgis=$POSTGIS_MAJOR \
       && rm -rf /var/lib/apt/lists/*
 

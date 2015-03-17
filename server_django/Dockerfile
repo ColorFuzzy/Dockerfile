@@ -24,6 +24,6 @@ RUN apt-get install -y --no-install-recommends libgeos-dev binutils python-gdal
 RUN rm -rf /var/lib/apt/lists/*
 
 # package bugfix
-sed -i '113s/()/()[:-6]/' /venv/DeliveryHeroChina/lib/python2.7/site-packages/django/contrib/gis/geos/libgeos.py
+RUN sed -i '113s/()/()[:-6]/' /venv/DeliveryHeroChina/lib/python2.7/site-packages/django/contrib/gis/geos/libgeos.py
 
 VOLUME /var/log/DeliveryHeroChina

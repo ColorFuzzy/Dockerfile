@@ -10,11 +10,10 @@ RUN cd /venv \
  && virtualenv Management
 COPY ./requirements.pip /tmp/requirements.pip
 RUN source /venv/Management/bin/activate \
- && pip install --timeout 120 -r /tmp/requirements.pip \
+ && pip install --timeout 180 -r /tmp/requirements.pip \
  && rm /tmp/requirements.pip
 
-# install packages
-RUN apt-get install -y --no-install-recommends nginx
+## clean up
 RUN rm -rf /var/lib/apt/lists/*
 
 VOLUME /var/log/Management

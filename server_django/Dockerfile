@@ -14,13 +14,14 @@ COPY ./requirements.pip /tmp/requirements.pip
 # memcached lib for pip
 RUN apt-get install -y --no-install-recommends libmemcached-dev
 RUN source /venv/DeliveryHeroChina/bin/activate \
- && pip install --timeout 120 -r /tmp/requirements.pip \
+ && pip install --timeout 180 -r /tmp/requirements.pip \
  && rm /tmp/requirements.pip
 
 # install packages
 RUN apt-get install -y --no-install-recommends mg vim net-tools git
 RUN apt-get install -y --no-install-recommends openssh-client openssh-server
 RUN apt-get install -y --no-install-recommends libgeos-dev binutils python-gdal
+RUN apt-get install -y --no-install-recommends nginx
 RUN rm -rf /var/lib/apt/lists/*
 
 # package bugfix

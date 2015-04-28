@@ -248,7 +248,6 @@ VOLUME ["/var/cache/nginx"]
 RUN apt-get install -y --no-install-recommends mg vim net-tools git
 RUN apt-get install -y --no-install-recommends openssh-client openssh-server
 RUN apt-get install -y --no-install-recommends libgeos-dev binutils python-gdal
-RUN apt-get install -y --no-install-recommends nginx
 
 
 

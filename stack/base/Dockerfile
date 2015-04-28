@@ -6,10 +6,52 @@ RUN apt-get update
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 #----------------------------------------------------------
+# 基本的编译和开发环境
+# 参考:
+# https://github.com/docker-library/buildpack-deps/tree/master/wheezy
+#----------------------------------------------------------
+
+RUN apt-get install -y --no-install-recommends \
+        	ca-certificates \
+	        curl \
+	        wget
+RUN apt-get install -y --no-install-recommends \
+		    bzr \
+		    git \
+		    mercurial \
+		    openssh-client \
+		    subversion
+RUN apt-get install -y \
+	    	autoconf \
+		    build-essential \
+		    imagemagick \
+		    libbz2-dev \
+		    libcurl4-openssl-dev \
+		    libevent-dev \
+		    libffi-dev \
+		    libglib2.0-dev \
+		    libjpeg-dev \
+		    liblzma-dev \
+		    libmagickcore-dev \
+		    libmagickwand-dev \
+		    libmysqlclient-dev \
+		    libncurses-dev \
+		    libpq-dev \
+    		libreadline-dev \
+	    	libsqlite3-dev \
+		    libssl-dev \
+		    libxml2-dev \
+		    libxslt-dev \
+		    libyaml-dev \
+		    zlib1g-dev
+
+
+#----------------------------------------------------------
 # 安装gosu命令行工具, 用于代替sudo/su命令(因为它们的有些行为会导致莫名的bug)
 # 参考:
 # https://registry.hub.docker.com/_/postgres/
 #----------------------------------------------------------
+
 # grab gosu for easy step-down from root
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
 RUN apt-get update && apt-get install -y curl \
@@ -108,8 +150,36 @@ VOLUME /db/mongodb
 #----------------------------------------------------------
 # 安装python 2.7
 # 参考:
-#
+# https://registry.hub.docker.com/_/python/
+# https://github.com/docker-library/python/blob/a736fc19a99afe3d77ba108263aad53bd1b9ab65/2.7/Dockerfile
 #----------------------------------------------------------
+
+ENV PYTHON_VERSION 2.7.9
+
+# gpg: key 18ADD4FF: public key "Benjamin Peterson <benjamin@python.org>" imported
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF
+
+RUN set -x \
+	&& mkdir -p /usr/src/python \
+	&& curl -SL "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.xz" -o python.tar.xz \
+	&& curl -SL "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.xz.asc" -o python.tar.xz.asc \
+	&& gpg --verify python.tar.xz.asc \
+	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
+	&& rm python.tar.xz* \
+	&& cd /usr/src/python \
+	&& ./configure --enable-shared --enable-unicode=ucs4 \
+	&& make -j$(nproc) \
+	&& make install \
+	&& ldconfig \
+	&& curl -SL 'https://bootstrap.pypa.io/get-pip.py' | python2 \
+	&& find /usr/local \
+		\( -type d -a -name test -o -name tests \) \
+		-o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+		-exec rm -rf '{}' + \
+	&& rm -rf /usr/src/python
+
+# install "virtualenv", since the vast majority of users of this image will want it
+RUN pip install virtualenv
 
 
 #----------------------------------------------------------

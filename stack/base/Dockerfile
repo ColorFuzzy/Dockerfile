@@ -208,6 +208,22 @@ RUN pip install virtualenv
 
 
 #----------------------------------------------------------
+# 安装golang1.4
+# 参考:
+# https://registry.hub.docker.com/_/golang/
+# https://github.com/docker-library/golang/tree/1a422afd7db928a821e97906ed27ed606e2f072a/1.4/wheezy
+#----------------------------------------------------------
+
+# gcc for cgo
+RUN apt-get install -y gcc libc6-dev make --no-install-recommends
+
+ENV GOLANG_VERSION 1.4.2
+RUN curl -sSL https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz | tar -v -C /usr/src -xz
+RUN cd /usr/src/go/src && ./make.bash --no-clean 2>&1
+ENV PATH /usr/src/go/bin:$PATH
+
+
+#----------------------------------------------------------
 # 安装nginx 1.7
 # 参考:
 # https://registry.hub.docker.com/_/nginx/

@@ -26,5 +26,20 @@ RUN sed -i '113s/()/()[:-6]/' /venv/DeliveryHeroChina/lib/python2.7/site-package
 VOLUME /var/log/DeliveryHeroChina
 
 
+#----------------------------------------------------------
+# 安装cc开发环境
+#----------------------------------------------------------
+
+## setup env
+RUN cd /venv \
+ && virtualenv Management
+COPY ./requirements_cc.pip /tmp/requirements_cc.pip
+RUN source /venv/Management/bin/activate \
+ && pip install --timeout 180 -r /tmp/requirements_cc.pip \
+ && rm /tmp/requirements_cc.pip
+
+VOLUME /var/log/Management
+
+
 #### 清理软件库缓存, 减小镜像大小
 RUN rm -rf /var/lib/apt/lists/*

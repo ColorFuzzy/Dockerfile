@@ -144,8 +144,32 @@ VOLUME /db/mongodb
 #----------------------------------------------------------
 # 安装redis 2.8
 # 参考:
-#
+# https://registry.hub.docker.com/_/redis/
+# https://github.com/docker-library/redis/tree/5a480f7c9f05822c31204a7197d209ef9db1a32c/2.8
 #----------------------------------------------------------
+
+# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
+RUN groupadd -r redis && useradd -r -g redis redis
+
+ENV REDIS_VERSION 2.8.19
+ENV REDIS_DOWNLOAD_URL http://download.redis.io/releases/redis-2.8.19.tar.gz
+ENV REDIS_DOWNLOAD_SHA1 3e362f4770ac2fdbdce58a5aa951c1967e0facc8
+
+# for redis-sentinel see: http://redis.io/topics/sentinel
+RUN apt-get install -y curl
+RUN buildDeps='gcc libc6-dev make' \
+	&& set -x \
+	&& apt-get install -y $buildDeps --no-install-recommends \
+	&& mkdir -p /usr/src/redis \
+	&& curl -sSL "$REDIS_DOWNLOAD_URL" -o redis.tar.gz \
+	&& echo "$REDIS_DOWNLOAD_SHA1 *redis.tar.gz" | sha1sum -c - \
+	&& tar -xzf redis.tar.gz -C /usr/src/redis --strip-components=1 \
+	&& rm redis.tar.gz \
+	&& make -C /usr/src/redis \
+	&& make -C /usr/src/redis install \
+	&& rm -r /usr/src/redis
+
+VOLUME /db/redis
 
 
 #----------------------------------------------------------

@@ -1,7 +1,8 @@
 # 安装基本的软件
 FROM debian:wheezy
+MAINTAINER Color Fuzzy <color.fuzzy@gmail.com>
 
-# 开始更新软件库, 这个在后面会删除缓存的数据(最后一行)
+#### 开始更新软件库, 这个在后面会删除缓存的数据(最后一行)
 RUN apt-get update
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
@@ -185,16 +186,20 @@ RUN pip install virtualenv
 #----------------------------------------------------------
 # 安装nginx 1.8
 # 参考:
-#
-#----------------------------------------------------------
-
-#----------------------------------------------------------
-# 安装其他的应用程序
-# 参考:
-#
 #----------------------------------------------------------
 
 
 
-# 清理软件库缓存, 减小镜像大小
+#----------------------------------------------------------
+# 安装常用的开发包
+#----------------------------------------------------------
+
+RUN apt-get install -y --no-install-recommends mg vim net-tools git
+RUN apt-get install -y --no-install-recommends openssh-client openssh-server
+RUN apt-get install -y --no-install-recommends libgeos-dev binutils python-gdal
+RUN apt-get install -y --no-install-recommends nginx
+
+
+
+#### 清理软件库缓存, 减小镜像大小
 RUN rm -rf /var/lib/apt/lists/*

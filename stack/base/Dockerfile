@@ -208,11 +208,21 @@ RUN pip install virtualenv
 
 
 #----------------------------------------------------------
-# 安装nginx 1.8
+# 安装nginx 1.7
 # 参考:
+# https://registry.hub.docker.com/_/nginx/
+# https://github.com/nginxinc/docker-nginx/tree/abd253dde5d627b151cd737ce953d6d01e6fdf4c
 #----------------------------------------------------------
 
+RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62
+RUN echo "deb http://nginx.org/packages/mainline/debian/ wheezy nginx" >> /etc/apt/sources.list
 
+ENV NGINX_VERSION 1.7.12-1~wheezy
+
+RUN apt-get update \
+    && apt-get install -y ca-certificates nginx=${NGINX_VERSION}
+
+VOLUME ["/var/cache/nginx"]
 
 #----------------------------------------------------------
 # 安装常用的开发包

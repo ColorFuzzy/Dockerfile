@@ -3,6 +3,7 @@ FROM debian:wheezy
 
 # 开始更新软件库, 这个在后面会删除缓存的数据(最后一行)
 RUN apt-get update
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 #----------------------------------------------------------
 # 安装gosu命令行工具, 用于代替sudo/su命令(因为它们的有些行为会导致莫名的bug)
@@ -16,14 +17,15 @@ RUN apt-get update && apt-get install -y curl \
 	&& curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture).asc" \
 	&& gpg --verify /usr/local/bin/gosu.asc \
 	&& rm /usr/local/bin/gosu.asc \
-	&& chmod +x /usr/local/bin/gosu \
-	&& apt-get purge -y --auto-remove curl
+	&& chmod +x /usr/local/bin/gosu
 
 
 #----------------------------------------------------------
 # 安装PostgreSQL 9.1 + PostGis1.5
 # 参考:
 # https://registry.hub.docker.com/_/postgres/
+# https://github.com/docker-library/postgres/tree/e616341507a7beec3a161b0a366ba0d3400328fd/9.1
+# https://github.com/ColorFuzzy/Dockerfile/tree/master/postgres_django
 #----------------------------------------------------------
 
 ## 安装PostgreSQL 9.1
@@ -50,8 +52,8 @@ RUN apt-get update \
 
 RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
 ENV PATH /usr/lib/postgresql/$PG_MAJOR/bin:$PATH
-ENV PGDATA /var/lib/postgresql/data
-VOLUME /var/lib/postgresql/data
+ENV PGDATA /db/postgresql
+VOLUME /db/postgresql
 
 
 ## 安装PostGis 1.5
@@ -62,11 +64,38 @@ RUN apt-get update \
       && apt-get install -y --no-install-recommends \
                  postgresql-$PG_MAJOR-postgis
 
+
 #----------------------------------------------------------
 # 安装mongo 2.6
 # 参考:
-#
+# https://registry.hub.docker.com/_/mongo/
+# https://github.com/docker-library/mongo/tree/faab1fed954b4267168fd22b4bc534a62365e7a2/2.6
 #----------------------------------------------------------
+
+# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
+RUN groupadd -r mongodb && useradd -r -g mongodb mongodb
+
+# grab gosu for easy step-down from root
+RUN apt-get install -y curl numactl
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
+RUN curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture)" \
+	&& curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture).asc" \
+	&& gpg --verify /usr/local/bin/gosu.asc \
+	&& rm /usr/local/bin/gosu.asc \
+	&& chmod +x /usr/local/bin/gosu
+
+ENV MONGO_RELEASE_FINGERPRINT DFFA3DCF326E302C4787673A01C4E7FAAAB2461C
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys $MONGO_RELEASE_FINGERPRINT
+
+ENV MONGO_VERSION 2.6.9
+
+RUN curl -SL "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-$MONGO_VERSION.tgz" -o mongo.tgz \
+	&& curl -SL "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-$MONGO_VERSION.tgz.sig" -o mongo.tgz.sig \
+	&& gpg --verify mongo.tgz.sig \
+	&& tar -xvf mongo.tgz -C /usr/local --strip-components=1 \
+	&& rm mongo.tgz*
+
+VOLUME /db/mongodb
 
 
 #----------------------------------------------------------

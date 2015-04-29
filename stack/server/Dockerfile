@@ -1,4 +1,4 @@
-FROM colorfuzzy/work:base
+FROM colorfuzzy/dockerfile:base
 MAINTAINER Color Fuzzy <color.fuzzy@gmail.com>
 
 #### get the `source` command & update

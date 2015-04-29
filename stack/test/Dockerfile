@@ -1,4 +1,4 @@
-FROM colorfuzzy/work:server
+FROM colorfuzzy/dockerfile:server
 MAINTAINER Color Fuzzy <color.fuzzy@gmail.com>
 
 

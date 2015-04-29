@@ -104,7 +104,7 @@ VOLUME /db/postgresql
 ENV POSTGIS_MAJOR 1.5
 RUN echo deb http://http.debian.net/debian wheezy-backports main >> /etc/apt/sources.list
 RUN apt-get update \
-      && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
                  postgresql-$PG_MAJOR-postgis
 
 

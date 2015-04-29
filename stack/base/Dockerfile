@@ -219,7 +219,7 @@ ENV PATH /usr/src/go/bin:$PATH
 # 安装nginx
 #----------------------------------------------------------
 
-RUN apt-get install nginx
+RUN apt-get install -y  nginx --no-install-recommends
 VOLUME ["/var/cache/nginx"]
 
 

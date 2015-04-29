@@ -5,6 +5,24 @@ MAINTAINER Color Fuzzy <color.fuzzy@gmail.com>
 RUN apt-get update
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
+
+#----------------------------------------------------------
+# 安装配送开发环境
+#----------------------------------------------------------
+
+RUN mkdir -p /venv/DeliveryService
+ENV GOPATH /venv/DeliveryService
+
+RUN go get github.com/beego/bee
+RUN go get github.com/astaxie/beego
+RUN go get github.com/lib/pq
+RUN go get github.com/paulmach/go.geo
+RUN go get github.com/garyburd/redigo/redis
+RUN go get github.com/astaxie/beego/session
+RUN go get code.google.com/p/rog-go/exp/cmd/godef
+RUN go get github.com/nsf/gocode
+
+
 #----------------------------------------------------------
 # 安装django开发环境
 #----------------------------------------------------------
@@ -43,11 +61,6 @@ RUN source /venv/Management/bin/activate \
  && rm /tmp/requirements_cc.pip
 
 VOLUME /var/log/Management
-
-
-#----------------------------------------------------------
-# 安装配送开发环境
-#----------------------------------------------------------
 
 
 

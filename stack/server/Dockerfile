@@ -32,7 +32,6 @@ RUN apt-get install -y --no-install-recommends libgeos-dev binutils python-gdal
 
 ## setup env
 RUN cd / \
-    && mkdir venv \
     && cd venv \
     && virtualenv DeliveryHeroChina
 COPY ./requirements_django.pip /tmp/requirements_django.pip
